@@ -6,8 +6,6 @@ async function getdb(){
     try{
     const MongoClient = mongodb.MongoClient
     const url = process.env.MONGOURI 
-    // mongodb+srv://sandeep:<db_password>@cluster0.sbxvzd3.mongodb.net/
-//    const url ="mongodb+srv://sandeep:D-3j_RWvJJkg58m@cluster0.sbxvzd3.mongodb.net"
     const server = await MongoClient.connect(url)
     const db = server.db("movieflix")
         return db;
