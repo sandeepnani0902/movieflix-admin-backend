@@ -9,6 +9,7 @@ async function InsertLanguageDb(language) {
         const db = await getdb(); // ensure connected
         const collection = db.collection("languages");
         const result = await collection.insertOne({ language });
+        console.log("languess", result)
         return result;
     } catch (err) {
         console.log("Insert error:", err);
