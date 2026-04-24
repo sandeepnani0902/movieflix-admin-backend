@@ -13,9 +13,14 @@ var WebSeriesRouter = require("./routes/controller/webseries")
 var SeasonsRouter = require("./routes/controller/AddSeasons")
 var EpisodeRouter = require("./routes/controller/Episode")
 // var addmovieRouter = require("./routes/controller/movie")
-const multer = require('multer');
+// const multer = require('multer');
+const dns = require("node:dns")
+// dns.setServers(["4.4.4.4", "8.8.8.8"])
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
+var getdb = require("./common/getdb")
 var app = express();
+
 
 // view engine setup
 app.set('view engine', 'jade');
@@ -25,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
-
+getdb()
 app.use('/uploads', express.static("uploads"))
 // app.use('/uploads/profile', express.static('uploads/profile'));
 app.use('/', indexRouter);
