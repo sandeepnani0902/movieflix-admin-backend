@@ -14,9 +14,9 @@ var SeasonsRouter = require("./routes/controller/AddSeasons")
 var EpisodeRouter = require("./routes/controller/Episode")
 // var addmovieRouter = require("./routes/controller/movie")
 // const multer = require('multer');
-const dns = require("node:dns")
-// dns.setServers(["4.4.4.4", "8.8.8.8"])
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+// const dns = require("node:dns")
+// // dns.setServers(["4.4.4.4", "8.8.8.8"])
+// dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 var getdb = require("./common/getdb")
 var app = express();
