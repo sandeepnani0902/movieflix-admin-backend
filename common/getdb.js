@@ -1,7 +1,7 @@
 var mongodb  = require("mongodb")
 require('dotenv').config()
-var dns = require('node:dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+// var dns = require('node:dns');
+// dns.setServers(['8.8.8.8', '8.8.4.4']);
 async function getdb(){
     try{
     const MongoClient = mongodb.MongoClient
