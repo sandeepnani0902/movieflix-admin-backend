@@ -4,6 +4,8 @@ const router = express.Router()
 
 router.get("/languages", async(req, res)=>{
    try{
+
+     
      const data = await getLanguagesData(req) 
      res.status(200).json({
       success:true,

@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const upload = require("../middleware/multerConfig")
 const { ObjectId } = require("mongodb")
+const nodemailer = require("nodemailer")
 
 
 router.post("/register",upload.any({name:"profile"}), async(req, res) => {
@@ -77,6 +78,146 @@ router.get("/dashboard", verifytoken, async(req, res)=>{
 
 })
 
+router.post("/forgot-password", async (req, res) => {
+  try {
+
+    const { email } = req.body;
+
+    console.log("email:", email);
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required"
+      });
+    }
+
+    const db = await getdb();
+
+    const user = await db
+      .collection("users")
+      .findOne({ email });
+
+    console.log("user:", user);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const resetLink =
+      `http://localhost:5173/reset-password/${token}`;
+
+    console.log("token:", token);
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Request",
+      html: `
+        <h3>Password Reset</h3>
+
+        <a href="${resetLink}">
+          Click Here To Reset Password
+        </a>
+      `,
+    };
+
+    transporter.sendMail(
+      mailOptions,
+      (err, info) => {
+
+        if (err) {
+          console.log(err);
+
+          return res.status(500).json({
+            message: "Error sending email"
+          });
+        }
+
+        console.log(info);
+
+        res.json({
+          success: true,
+          message:
+            "Password reset link sent successfully"
+        });
+      }
+    );
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
+});
+// router.post("/forgot-password", async(req, res)=>{
+//   const {email} = req.body
+//   console.log("email", email)
+//   if(!email){
+//     return res.status(400).json({message:"email is required"})
+//   }
+//   const db = await getdb()
+//   const user = await db.collection("users").findOne({email})
+//   console.log("user", user)
+//   if(!user){
+//     return res.status(404).json({message:"user not found"})
+//   }
+//   const token = jwt.sign({userId:user._id, email:user.email}, process.env.JWT_SECRET, {expiresIn:"15m"})
+//   const resetLink =  `http://localhost:5173/reset-password/${token}`;
+//   // send email to user with reset link
+//   console.log("token",token)
+//   const transporter = nodemailer.createTransport({
+//     service:"gmail",
+//     auth:{
+//       user:process.env.EMAIL_USER,
+//       pass:process.env.EMAIL_PASS
+//     }
+//   })
+//   const mailOptions = {
+//     from: process.env.EMAIL_USER,
+//     to: email,
+//     subject:"Password Reset Request",
+//     // text:`You requested a password reset. Click the link to reset your password: ${resetLink}`
+//      html: `
+//       <h3>Password Reset</h3>
+//       <a href="${resetLink}">
+//         Click Here To Reset Password
+//       </a>
+//     `,
+//   }
+//   console.log("mailopttoions",mailOptions)
+//   transporter.sendMail(mailOptions, (err, info)=>{
+//     if(err){
+//       console.error("Error sending email:", err)
+//       return res.status(500).json({message:"error sending email"})
+//     }
+//     res.json({message:"password reset link sent to your email"})
+//   })
+
+
+// })
+
 function verifytoken(req, res, next){
   const authheader = req.headers['authorization'];
   const token = authheader && authheader.split(' ')[1];
@@ -93,6 +234,7 @@ function verifytoken(req, res, next){
   })
 }
 
+ 
 
 
-module.exports = router
+module.exports = router;
