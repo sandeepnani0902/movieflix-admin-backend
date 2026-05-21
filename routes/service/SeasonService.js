@@ -27,12 +27,19 @@ async function SeasonService(req) {
     // Sort seasons by number (important!)
     Seasons.sort((a, b) => a.seasonNumber - b.seasonNumber);
 
-    // Attach images in order
-    files.forEach((file, index) => {
-      if (Seasons[index]) {
-        Seasons[index].image = file.path;
-      }
-    });
+    // Attach images by field name matching (e.g. season1_image -> seasonNumber: 1)
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        const match = file.fieldname.match(/season(\d+)_image/);
+        if (match) {
+          const seasonNumber = Number(match[1]);
+          const season = Seasons.find(s => s.seasonNumber === seasonNumber);
+          if (season) {
+            season.image = file.path;
+          }
+        }
+      });
+    }
 
     // console.log("Final Seasons:", Seasons);
 
@@ -60,18 +67,23 @@ const DeleteSeason = async ({ id, seasonNumber }) => {
       throw new Error("Season not found or already deleted");
     }
 
-    const seasonfilepath = path.join(
-      "uploads",
-      "webseries",
-      id,
-      "seasons",
-      `season${seasonNumber}`
-    );
-
-    await fs.rm(seasonfilepath, {
-      recursive: true,
-      force: true
-    });
+    try {
+      const seasonfilepath = path.join(
+        "uploads",
+        "webseries",
+        id,
+        "seasons",
+        `season${seasonNumber}`
+      );
+      if (fs.existsSync(seasonfilepath)) {
+        await fs.promises.rm(seasonfilepath, {
+          recursive: true,
+          force: true
+        });
+      }
+    } catch (e) {
+      console.log("Local season folder deletion skipped or failed:", e.message);
+    }
 
     return response;
   } catch (err) {

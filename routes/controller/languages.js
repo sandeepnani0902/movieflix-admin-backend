@@ -36,7 +36,7 @@ router.post("/language",async (req, res)=>{
    }
    catch(err){
       res.status(500).json({
-         success:true,
+         success:false,
          message:'something went wrong',
          error:err.message
       })
@@ -56,7 +56,7 @@ router.delete("/language/:id", async(req, res)=>{
    }
    catch(err){
       res.status(500).json({ 
-         success:true,
+         success:false,
          message:"something went wrong",
          error:err.message
        });

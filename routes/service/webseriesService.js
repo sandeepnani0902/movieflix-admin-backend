@@ -2,8 +2,8 @@ const {AddWebseriesDb, GetWebseriesDb, DeleteWebseriesDb,UpdateSerieDb} = requir
 const  AddWebSeries = async(req) => {
     try{
     const {title, director, date, language, genre, description, seasons} = req.body
-    const image = req.files[0]?.path
-    const banner = req.files[1]?.path
+    const image = req.files?.find(f => f.fieldname === "webseriesImage")?.path
+    const banner = req.files?.find(f => f.fieldname === "webseriesbanner")?.path
     const document ={
         _id: req.body._id,
         title,
@@ -21,7 +21,7 @@ const  AddWebSeries = async(req) => {
  return response
 }
 catch(err){
-    return err
+    throw err
 }
  //  getting data from db   
 }
@@ -32,7 +32,7 @@ const  GetWebseriesService = async(req)=>{
     return response
    }
    catch(err){
-    return err
+    throw err
    }
 }
 
@@ -44,7 +44,7 @@ const DeteleWebseries = async(req)=>{
         return response
     }
     catch(err){
-        return err
+        throw err
     }
 }
  const  UpdateWebseriesTitle = async({id, title}) =>{

@@ -8,7 +8,7 @@ const {InsertLanguageDb, getLanguagesDb, deleteLaguagefromDb} = require("../DAO/
    return result
     }
     catch(err){
-        return  err
+        throw err
     }
 }
  async function getLanguagesData(req) {
@@ -17,7 +17,7 @@ const {InsertLanguageDb, getLanguagesDb, deleteLaguagefromDb} = require("../DAO/
        return result
     } 
     catch(err){
-        return  err
+        throw err
     } 
 }
 
@@ -28,7 +28,7 @@ async function deleteLanguage(params) {
     return result   
 }
 catch(err){
-    return err
+    throw err
 }
 }
 

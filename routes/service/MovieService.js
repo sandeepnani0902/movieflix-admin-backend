@@ -21,7 +21,7 @@ const {MovieDb,GetMovieDb,DeleteMovieDb} = require("../DAO/MovieDb")
   return response
 }
 catch(err){
-    return err
+    throw err
 }
 }
 async function GetMovies(req){
@@ -29,19 +29,19 @@ async function GetMovies(req){
   const response = await GetMovieDb(req)
   return response
  }
- catch(err){
-  return err
- }
+  catch(err){
+    throw err
+  }
 }
 
 async function DeleteMovie(req){
   try{
-  const id = req.params
+  const id = req.params.id
   const response = await  DeleteMovieDb(id)
   return response
 }
   catch(err){
-    return err
+    throw err
   }
 }
 // updat series title

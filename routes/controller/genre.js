@@ -48,7 +48,7 @@ router.post("/genre", async(req, res)=>{
 })
 router.delete("/genre/:id", async(req, res)=>{
   try{
-    const id = req.params
+    const id = req.params.id
     const db= await getdb()
     const collection = db.collection("genre")
     const data = await collection.deleteOne({_id :new mongodb.ObjectId(id)})

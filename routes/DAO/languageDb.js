@@ -23,7 +23,7 @@ async function getLanguagesDb() {
         const result = await db.collection("languages").find().toArray();
         return result;
     } catch (err) {
-        return err
+        throw err
     }
 }
 
@@ -34,7 +34,7 @@ async function deleteLaguagefromDb(id) {
         return result
     }
     catch(err){
-        return err
+        throw err
     }
 }
 module.exports = { InsertLanguageDb, getLanguagesDb, deleteLaguagefromDb };

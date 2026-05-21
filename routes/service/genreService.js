@@ -1,14 +1,12 @@
 const genreDb = require("../DAO/genreDb")
 
-function sendGenre(body){
+async function sendGenre(body){
     try{
-   
-    const result = genreDb(body)
-    return  result
+     const result = await genreDb(body)
+     return  result
     }
     catch(err){
-        return err
+        throw err
     }
-    
 }
 module.exports = sendGenre

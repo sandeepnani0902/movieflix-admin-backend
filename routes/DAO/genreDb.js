@@ -9,7 +9,7 @@ async function genreDb(body){
   return result
   }
   catch(err){
-    return err
+    throw err
   }
 
 }

@@ -8,7 +8,7 @@ async function MovieDb(document){
     return response
     }
     catch(err){
-        return err
+        throw err
     }
 }
 
@@ -17,10 +17,9 @@ async function GetMovieDb(){
         const db = await getDb()
         const response = await db.collection("movies").find().toArray()
         return response
-        db.close()
     }
     catch(err){
-        return err
+        throw err
     }
 }
  async function DeleteMovieDb(id){
@@ -31,7 +30,7 @@ async function GetMovieDb(){
         return response
     }
     catch(err){
-        return err
+        throw err
     }
  }
 module.exports = {MovieDb, GetMovieDb,DeleteMovieDb}

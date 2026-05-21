@@ -8,10 +8,10 @@ const { ObjectId } = require("mongodb")
 const nodemailer = require("nodemailer")
 
 
-router.post("/register",upload.any({name:"profile"}), async(req, res) => {
+router.post("/register",upload.single("profile"), async(req, res) => {
   try{
   const {firstname, lastname, email,  mobile, password} = req.body
-  const profile = req.files?.[0].path
+  const profile = req.file?.path
   
   console.log(profile)
   const db = await getdb();
@@ -226,8 +226,7 @@ function verifytoken(req, res, next){
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
     if(err){
-      res.status(401).json({message:"invalid or expired token"})
-
+      return res.status(401).json({message:"invalid or expired token"})
     }
     req.user = decoded;
     next()

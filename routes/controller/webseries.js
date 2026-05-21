@@ -102,7 +102,11 @@ router.post("/webseries/:id/updatetitle", async(req, res)=>{
     
 }
 catch(err){
-    throw err
+    res.status(500).json({
+        success:false,
+        message:"failed to update title",
+        error:err.message
+    })
 }
 })
 
