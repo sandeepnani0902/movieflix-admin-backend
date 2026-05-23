@@ -216,7 +216,47 @@ router.post("/forgot-password", async (req, res) => {
 //   })
 
 
-// })
+router.post("/update-profile", verifytoken, upload.single("profile"), async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { firstname, lastname, mobile, password } = req.body;
+    const db = await getdb();
+
+    const updateFields = {};
+    if (firstname) updateFields.firstname = firstname;
+    if (lastname) updateFields.lastname = lastname;
+    if (mobile) updateFields.mobile = mobile;
+
+    if (req.file) {
+      updateFields.profile = req.file.path;
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updateFields.password = bcrypt.hashSync(password, salt);
+    }
+
+    await db.collection("users").updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: updateFields }
+    );
+
+    const updatedUser = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
+      error: error.message,
+    });
+  }
+});
 
 function verifytoken(req, res, next){
   const authheader = req.headers['authorization'];
