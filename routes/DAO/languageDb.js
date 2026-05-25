@@ -1,4 +1,4 @@
-const mongodb  = require("mongodb");
+const mongodb = require("mongodb");
 const getdb = require("../../common/getdb")
 require("dotenv").config();
 
@@ -28,12 +28,12 @@ async function getLanguagesDb() {
 }
 
 async function deleteLaguagefromDb(id) {
-    try{
-        const db = await getdb()     
-        const result = await db.collection("languages").deleteOne({_id:new mongodb.ObjectId(id)})
+    try {
+        const db = await getdb()
+        const result = await db.collection("languages").deleteOne({ _id: new mongodb.ObjectId(id) })
         return result
     }
-    catch(err){
+    catch (err) {
         throw err
     }
 }
